@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaPlayerBroadcaster.Daemon.CLI", "MediaPlayerBroadcaster.Daemon.CLI\MediaPlayerBroadcaster.Daemon.CLI.csproj", "{78F617CF-0FD1-4B91-8DAB-26B40C65CACD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaPlayerBroadcaster.Server.CLI", "MediaPlayerBroadcaster.Server.CLI\MediaPlayerBroadcaster.Server.CLI.csproj", "{ED939ACA-04F5-4E76-8528-D465C4FC772D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78F617CF-0FD1-4B91-8DAB-26B40C65CACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78F617CF-0FD1-4B91-8DAB-26B40C65CACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78F617CF-0FD1-4B91-8DAB-26B40C65CACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78F617CF-0FD1-4B91-8DAB-26B40C65CACD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED939ACA-04F5-4E76-8528-D465C4FC772D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED939ACA-04F5-4E76-8528-D465C4FC772D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED939ACA-04F5-4E76-8528-D465C4FC772D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED939ACA-04F5-4E76-8528-D465C4FC772D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7DB2FC2-205B-4D9E-BFDD-97E3A16AEA15}
+	EndGlobalSection
+EndGlobal
