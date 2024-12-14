@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaPlayerBroadcaster.Daemon.CLI", "MediaPlayerBroadcaster.Daemon.CLI\MediaPlayerBroadcaster.Daemon.CLI.csproj", "{78F617CF-0FD1-4B91-8DAB-26B40C65CACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPlayerBroadcaster.Daemon.CLI", "MediaPlayerBroadcaster.Daemon.CLI\MediaPlayerBroadcaster.Daemon.CLI.csproj", "{78F617CF-0FD1-4B91-8DAB-26B40C65CACD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaPlayerBroadcaster.Server.CLI", "MediaPlayerBroadcaster.Server.CLI\MediaPlayerBroadcaster.Server.CLI.csproj", "{ED939ACA-04F5-4E76-8528-D465C4FC772D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPlayerBroadcaster.Server.CLI", "MediaPlayerBroadcaster.Server.CLI\MediaPlayerBroadcaster.Server.CLI.csproj", "{ED939ACA-04F5-4E76-8528-D465C4FC772D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaPlayerBroadcaster.NativeClient.WPF", "MediaPlayerBroadcaster.NativeClient.WPF\MediaPlayerBroadcaster.NativeClient.WPF.csproj", "{145B7BDE-B497-4613-86D8-5C1E7609CAF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{ED939ACA-04F5-4E76-8528-D465C4FC772D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED939ACA-04F5-4E76-8528-D465C4FC772D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED939ACA-04F5-4E76-8528-D465C4FC772D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{145B7BDE-B497-4613-86D8-5C1E7609CAF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{145B7BDE-B497-4613-86D8-5C1E7609CAF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{145B7BDE-B497-4613-86D8-5C1E7609CAF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{145B7BDE-B497-4613-86D8-5C1E7609CAF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

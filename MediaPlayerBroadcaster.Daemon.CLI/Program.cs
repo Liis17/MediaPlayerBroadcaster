@@ -12,6 +12,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
         static List<string> whiteList = new List<string>();
         static async Task Main(string[] args)
         {
+            Console.Title = "MediaPlayerBroadcaster.Daemon.CLI";
             var _ip = File.ReadAllText("ip.data");
             var _port = File.ReadAllText("port.data");
             whiteList = File.ReadAllLines("whitelist.data").ToList();
