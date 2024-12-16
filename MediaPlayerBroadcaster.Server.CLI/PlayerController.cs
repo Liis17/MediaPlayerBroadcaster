@@ -32,5 +32,34 @@ namespace MediaPlayerBroadcaster.Server.CLI
             };
             return Ok(response);
         }
+
+        [HttpPost("setplayerimage")]
+        public async Task<IActionResult> SetPlayerImage()
+        {
+            try
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await Request.Body.CopyToAsync(memoryStream);
+                    PlayerInfoStorage.PlayerImage = memoryStream.ToArray(); // Сохраняем изображение в памяти
+                }
+                return Ok(new { Status = "Изображение плеера обновлено" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Status = "Ошибка загрузки изображения", Error = ex.Message });
+            }
+        }
+
+        [HttpGet("getplayerimage")]
+        public IActionResult GetPlayerImage()
+        {
+            if (PlayerInfoStorage.PlayerImage == null || PlayerInfoStorage.PlayerImage.Length == 0)
+            {
+                return NotFound(new { Status = "Изображение отсутствует" });
+            }
+
+            return File(PlayerInfoStorage.PlayerImage, "image/jpeg"); // Отправляем изображение клиенту
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Security.Cryptography;
 
 using Windows.Media.Control;
 
@@ -8,6 +9,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
     
     class Program
     {
+        private static string _lastImageHash = null;
         static Sender _sender;
         static List<string> whiteList = new List<string>();
         static async Task Main(string[] args)
@@ -39,10 +41,30 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                     if (playbackInfo.PlaybackStatus == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
                     {
                         var mediaProperties = await session.TryGetMediaPropertiesAsync();
-                        string appName = session.SourceAppUserModelId;
-                        string appNameToLower = appName.ToLower();
-                        string trackTitle = mediaProperties.Title;
-                        string artistName = mediaProperties.Artist;
+                        var appName = session.SourceAppUserModelId;
+                        var appNameToLower = appName.ToLower();
+                        var trackTitle = mediaProperties.Title;
+                        var artistName = mediaProperties.Artist;
+
+                        var displayProperties = session.TryGetMediaPropertiesAsync();
+                        var thumbnailStream = await mediaProperties.Thumbnail.OpenReadAsync();
+
+                        // Получаем байты обложки и вычисляем хэш
+                        byte[] imageBytes;
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await thumbnailStream.AsStreamForRead().CopyToAsync(memoryStream);
+                            imageBytes = memoryStream.ToArray();
+                        }
+
+                        string currentImageHash = ComputeHash(imageBytes);
+
+                        // Отправляем обложку, только если она изменилась
+                        if (currentImageHash != _lastImageHash)
+                        {
+                            _lastImageHash = currentImageHash;
+                            await _sender.SendPlayerImageAsync(imageBytes);
+                        }
 
                         bool containsMatch = whiteList.Any(item => appNameToLower.Contains(item.ToLower()));
 
@@ -56,16 +78,24 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                             await _sender.SendPlayerInfoAsync("Сейчас никто не играет", "Сейчас ничего не играет", "Silence");
                             return $"Приложение: {appName}\nТрек: {trackTitle}\nИсполнитель: {artistName}\nЭто приложение скрыто.";
                         }
-
-                        
                     }
                 }
-                await _sender.SendPlayerInfoAsync( "Сейчас никто не играет", "Сейчас ничего не играет", "Silence");
+
+                await _sender.SendPlayerInfoAsync("Сейчас никто не играет", "Сейчас ничего не играет", "Silence");
                 return null;
             }
             catch (Exception ex)
             {
                 return $"Ошибка: {ex.Message}";
+            }
+        }
+
+        private static string ComputeHash(byte[] data)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashBytes = sha256.ComputeHash(data);
+                return Convert.ToBase64String(hashBytes);
             }
         }
     }
