@@ -38,6 +38,7 @@
 
         </Border>
         <Border
+            x:Name="BackgroundTrackShadow"
             Margin="35"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"

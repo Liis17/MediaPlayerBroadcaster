@@ -19,9 +19,17 @@
                     Height="150"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top" />
-                <TextBlock x:Name="TrackPreview" Text="#trackdata" />
+                <StackPanel Margin="5" Orientation="Vertical">
+                    <TextBlock x:Name="TrackPreview" Text="#trackdata" />
+                    <Button
+                        x:Name="AcceptButton"
+                        Margin="5"
+                        Click="AcceptButton_Click"
+                        Content="Разрешить приложение" />
+                </StackPanel>
+
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Margin="5" Orientation="Horizontal">
                 <CheckBox
                     x:Name="BlurEnabler"
                     Content="Размыть фон"
@@ -31,11 +39,21 @@
                 <Slider
                     x:Name="BlurRadius"
                     Width="150"
-                    IsEnabled="False"
+                    IsEnabled="True"
                     Maximum="40"
                     Minimum="0"
-                    Value="200" />
+                    Value="10" />
                 <TextBlock Text=" Сила раммытия" />
+            </StackPanel>
+            <StackPanel Margin="5" Orientation="Horizontal">
+                <TextBlock Text="Закругления окна" />
+                <Slider
+                    x:Name="CornerRadius"
+                    Width="150"
+                    IsEnabled="True"
+                    Maximum="45"
+                    Minimum="0"
+                    Value="45" />
             </StackPanel>
         </StackPanel>
 

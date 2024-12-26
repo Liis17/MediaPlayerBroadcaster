@@ -13,6 +13,8 @@ namespace MediaPlayerBroadcaster.NativeClient.WPF
         private CancellationTokenSource _cancellationTokenSource;
         public static List<string> whiteList = new List<string>();
         public static ForScreenCapture FCW;
+
+        private string _currentPlayer = string.Empty;
         public TrackData CurrentTrackData;
         public MainWindow()
         {
@@ -59,6 +61,7 @@ namespace MediaPlayerBroadcaster.NativeClient.WPF
                     var (mediaInfo, albumArt) = await GetPlayingMediaTrackWithArt();
                     Dispatcher.Invoke(() =>
                     {
+                        ButtonUpdate();
                         TrackPreview.Text = mediaInfo ?? "Ничего не воспроизводится.";
                         FCW.UpdateText(CurrentTrackData.Name, CurrentTrackData.Artist);
 
@@ -74,6 +77,7 @@ namespace MediaPlayerBroadcaster.NativeClient.WPF
                                 TrackImage.Source = image;
                                 FCW.UpdateImage(image);
                                 FCW.UpdateBackground(image, (bool)BlurEnabler.IsChecked, (int)BlurRadius.Value);
+                                FCW.UpdateWindow((int)CornerRadius.Value);
                             }
                         }
                         else
@@ -83,6 +87,7 @@ namespace MediaPlayerBroadcaster.NativeClient.WPF
                             TrackImage.Source = CreateTransparentImage();
                             FCW.UpdateImage(CreateTransparentImage());
                             FCW.UpdateBackground(CreateTransparentImage(), (bool)BlurEnabler.IsChecked, (int)BlurRadius.Value);
+                            FCW.UpdateWindow((int)CornerRadius.Value);
                         }
                     });
 
@@ -102,8 +107,14 @@ namespace MediaPlayerBroadcaster.NativeClient.WPF
             var transparentBitmap = new BitmapImage();
             using (var memoryStream = new MemoryStream())
             {
-                var bitmap = new System.Drawing.Bitmap(1, 1);
-                bitmap.SetPixel(0, 0, System.Drawing.Color.Black);
+                var bitmap = new System.Drawing.Bitmap(100, 100);
+                for (int x = 0; x < 100; x++)
+                {
+                    for (int y = 0; y < 100; y++)
+                    {
+                        bitmap.SetPixel(x, y, System.Drawing.Color.Transparent);
+                    }
+                }
                 bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
@@ -150,16 +161,43 @@ namespace MediaPlayerBroadcaster.NativeClient.WPF
                         string trackInfo = containsMatch
                             ? $"Приложение: {appName}\nТрек: {trackTitle}\nИсполнитель: {artistName}"
                             : $"Приложение: {appName}\nТрек: {trackTitle}\nИсполнитель: {artistName}\nЭто приложение скрыто.";
-                        CurrentTrackData = new TrackData { Artist = artistName, Name = trackTitle };
+                        _currentPlayer = appName;
+                        var a = containsMatch ? CurrentTrackData = new TrackData { Artist = artistName, Name = trackTitle } : CurrentTrackData = new TrackData { Artist = "", Name = "🔒" };
+
                         return (trackInfo, albumArt);
                     }
                 }
+
                 return (null, null);
             }
             catch (Exception ex)
             {
                 return ($"Ошибка: {ex.Message}", null);
             }
+
+        }
+
+        private void ButtonUpdate()
+        {
+            if (whiteList.Any(item => item.Equals(_currentPlayer, StringComparison.OrdinalIgnoreCase)))
+            {
+                AcceptButton.IsEnabled = false;
+            }
+            else
+            {
+                AcceptButton.IsEnabled = true;
+            }
+        }
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            whiteList.Add(_currentPlayer);
+            SaveWhiteList();
+        }
+
+        public void SaveWhiteList()
+        {
+            File.WriteAllLines("whitelist.data", whiteList);
         }
     }
 }

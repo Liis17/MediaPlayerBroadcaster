@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MediaPlayerBroadcaster.NativeClient.WPF
+﻿namespace MediaPlayerBroadcaster.NativeClient.WPF
 {
     public class TrackData
     {

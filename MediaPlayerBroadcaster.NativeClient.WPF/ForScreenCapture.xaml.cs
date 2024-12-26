@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MediaPlayerBroadcaster.NativeClient.WPF
 {
@@ -26,31 +16,58 @@ namespace MediaPlayerBroadcaster.NativeClient.WPF
         {
             if (e.ChangedButton == MouseButton.Left)
             {
-                DragMove(); 
+                DragMove();
             }
         }
         public void UpdateText(string track, string artist)
         {
             TrackName.Text = track;
             ArtistName.Text = artist;
+
+            if (track.Length < 5)
+            {
+                TrackName.FontSize = 65;
+            }
+            else if (track.Length < 20 && track.Length >= 5)
+            {
+                TrackName.FontSize = 40;
+            }
+            else if (track.Length >= 20 && track.Length <= 40)
+            {
+                TrackName.FontSize = 33;
+            }
+            else if (track.Length >= 41)
+            {
+                TrackName.FontSize = 25;
+            }
         }
 
         public void UpdateImage(BitmapImage image)
         {
             ImageTrack.ImageSource = image;
+
+        }
+        public void UpdateWindow(int corner)
+        {
+            BackgroundTrack.CornerRadius = new CornerRadius(corner);
+            BackgroundTrackShadow.CornerRadius = new CornerRadius(corner);
+            UpdateLayout();
         }
         public void UpdateBackground(BitmapImage image, bool blur = false, int blurRadius = 10)
         {
             WriteableBitmap writeableBitmap = new WriteableBitmap(image);
 
-            
+
             if (blur)
             {
-                writeableBitmap = writeableBitmap.Convolute(WriteableBitmapExtensions.KernelGaussianBlur5x5);
-                writeableBitmap = writeableBitmap.Convolute(WriteableBitmapExtensions.KernelGaussianBlur5x5);
+                for (int i = 0; i < blurRadius; i++)
+                {
+                    writeableBitmap = writeableBitmap.Convolute(WriteableBitmapExtensions.KernelGaussianBlur5x5);
+                }
+
             }
             BackgroundTrackImage.ImageSource = writeableBitmap;
-            
+
 
         }
         public void UpdateBackground(System.Drawing.Color color)
