@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Hosting;
-
 namespace MediaPlayerBroadcaster.Server.CLI
 {
     public class Program

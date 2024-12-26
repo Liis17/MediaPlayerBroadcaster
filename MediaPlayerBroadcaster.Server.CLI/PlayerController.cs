@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
 using Newtonsoft.Json.Linq;
 
 namespace MediaPlayerBroadcaster.Server.CLI
@@ -41,7 +40,7 @@ namespace MediaPlayerBroadcaster.Server.CLI
                 using (var memoryStream = new MemoryStream())
                 {
                     await Request.Body.CopyToAsync(memoryStream);
-                    PlayerInfoStorage.PlayerImage = memoryStream.ToArray(); // Сохраняем изображение в памяти
+                    PlayerInfoStorage.PlayerImage = memoryStream.ToArray(); 
                 }
                 return Ok(new { Status = "Изображение плеера обновлено" });
             }
@@ -59,7 +58,7 @@ namespace MediaPlayerBroadcaster.Server.CLI
                 return NotFound(new { Status = "Изображение отсутствует" });
             }
 
-            return File(PlayerInfoStorage.PlayerImage, "image/jpeg"); // Отправляем изображение клиенту
+            return File(PlayerInfoStorage.PlayerImage, "image/jpeg");
         }
     }
 }

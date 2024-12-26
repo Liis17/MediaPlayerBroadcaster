@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-using Newtonsoft.Json;
-namespace MediaPlayerBroadcaster.Server.CLI
+﻿namespace MediaPlayerBroadcaster.Server.CLI
 {
     public class Startup
     {
