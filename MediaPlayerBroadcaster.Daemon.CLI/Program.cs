@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using System.Security.Cryptography;
-
+﻿using System.Security.Cryptography;
 using Windows.Media.Control;
 
 
 namespace MediaPlayerBroadcaster.Daemon.CLI
 {
-    
+
     class Program
     {
         private static string _lastImageHash = null;
@@ -18,7 +16,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
             var _ip = File.ReadAllText("ip.data");
             var _port = File.ReadAllText("port.data");
             whiteList = File.ReadAllLines("whitelist.data").ToList();
-             _sender = new Sender(_ip, _port);
+            _sender = new Sender(_ip, _port);
             while (true)
             {
                 var mediaInfo = await GetPlayingMediaTrack();
@@ -49,7 +47,6 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                         var displayProperties = session.TryGetMediaPropertiesAsync();
                         var thumbnailStream = await mediaProperties.Thumbnail.OpenReadAsync();
 
-                        // Получаем байты обложки и вычисляем хэш
                         byte[] imageBytes;
                         using (var memoryStream = new MemoryStream())
                         {
@@ -59,7 +56,6 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
 
                         string currentImageHash = ComputeHash(imageBytes);
 
-                        // Отправляем обложку, только если она изменилась
                         if (currentImageHash != _lastImageHash)
                         {
                             _lastImageHash = currentImageHash;
