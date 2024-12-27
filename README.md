@@ -63,7 +63,7 @@
 
 ## Зависимости
 
-- [MicaWPF](https://github.com/MicaWPF/MicaWPF)
+- [MicaWPF](https://github.com/Simnico99/MicaWPF)
 - [Windows.Media.Control](https://docs.microsoft.com/en-us/uwp/api/windows.media.control)
 
 ---
