@@ -24,7 +24,8 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
             {
                 Artist = artist,
                 Track = track,
-                App = app
+                App = app,
+                DiscordImageLink = Program.DiscordImageGuid
             };
             var jsonContent = JsonConvert.SerializeObject(playerInfo);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");

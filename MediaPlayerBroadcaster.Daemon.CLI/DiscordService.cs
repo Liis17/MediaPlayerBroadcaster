@@ -1,6 +1,8 @@
 ﻿using DiscordRPC;
 using DiscordRPC.Logging;
 
+using MediaPlayerBroadcaster.Daemon.CLI;
+
 using System;
 using System.Threading.Tasks;
 
@@ -73,9 +75,9 @@ public class DiscordService : IDisposable
             State = $"{artist}",
             Assets = new Assets
             {
-                LargeImageKey = $"http://{ip}:{port}/player/getplayerimage",
+                LargeImageKey = $"http://{ip}:{port}/player/getplayerimage/{Program.DiscordImageGuid}",
                 LargeImageText = "Large Image Text",
-                SmallImageKey = _showSmallIcon ? $"http://{ip}:{port}/player/getplayerimage" : null,
+                SmallImageKey = _showSmallIcon ? $"http://{ip}:{port}/player/getplayerimage/{Program.DiscordImageGuid}" : null,
                 SmallImageText = _showSmallIcon ? "Small Image Text" : null
             },
             Timestamps = new Timestamps

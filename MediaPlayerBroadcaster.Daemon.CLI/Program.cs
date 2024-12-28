@@ -13,6 +13,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
         static List<string> whiteList = new List<string>();
         public static TrackData CurrentTrackData;
         static DiscordService _discordService;
+        public static string DiscordImageGuid = string.Empty;
         static async Task Main(string[] args)
         {
             
@@ -74,6 +75,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                             if (imageBytes != null)
                             {
                                 await _sender.SendPlayerImageAsync(imageBytes);
+                                DiscordImageGuid = Guid.NewGuid().ToString().Replace("-","") ;
                             }
                         }
 
