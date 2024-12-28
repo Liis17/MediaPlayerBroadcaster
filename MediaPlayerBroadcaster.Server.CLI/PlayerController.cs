@@ -16,6 +16,8 @@ namespace MediaPlayerBroadcaster.Server.CLI
                 PlayerInfoStorage.Track = track.ToString();
             if (data.TryGetValue("App", out var app))
                 PlayerInfoStorage.App = app.ToString();
+            if(data.TryGetValue("DiscordImageLink", out var dil))
+                PlayerInfoStorage.DiscordImageLink = dil.ToString();
 
             return Ok(new { Status = "Данные плеера обновлены" });
         }
@@ -52,6 +54,16 @@ namespace MediaPlayerBroadcaster.Server.CLI
 
         [HttpGet("getplayerimage")]
         public IActionResult GetPlayerImage()
+        {
+            if (PlayerInfoStorage.PlayerImage == null || PlayerInfoStorage.PlayerImage.Length == 0)
+            {
+                return NotFound(new { Status = "Изображение отсутствует" });
+            }
+
+            return File(PlayerInfoStorage.PlayerImage, "image/jpeg");
+        }
+        [HttpGet("getplayerimage/{PlayerInfoStorage.DiscordImageLink}")]
+        public IActionResult GetPlayerDiscordImage()
         {
             if (PlayerInfoStorage.PlayerImage == null || PlayerInfoStorage.PlayerImage.Length == 0)
             {
