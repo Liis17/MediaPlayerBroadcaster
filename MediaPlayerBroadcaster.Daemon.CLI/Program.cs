@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Windows.Media;
 using Windows.Media.Control;
 
 
@@ -10,13 +11,21 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
         private static string _lastImageHash = null;
         static Sender _sender;
         static List<string> whiteList = new List<string>();
+        public static TrackData CurrentTrackData;
+        static DiscordService _discordService;
         static async Task Main(string[] args)
         {
+            
+            CurrentTrackData = new TrackData();
             Console.Title = "MediaPlayerBroadcaster.Daemon.CLI";
             var _ip = File.ReadAllText("ip.data");
             var _port = File.ReadAllText("port.data");
             whiteList = File.ReadAllLines("whitelist.data").ToList();
             _sender = new Sender(_ip, _port);
+
+            _discordService = new DiscordService("1255752860189196380", _ip, _port);
+            await _discordService.InitializeAsync();
+
             while (true)
             {
                 var mediaInfo = await GetPlayingMediaTrack();
@@ -41,33 +50,41 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                         var mediaProperties = await session.TryGetMediaPropertiesAsync();
                         var appName = session.SourceAppUserModelId;
                         var appNameToLower = appName.ToLower();
-                        var trackTitle = mediaProperties.Title;
-                        var artistName = mediaProperties.Artist;
+                        var trackTitle = mediaProperties?.Title;
+                        var artistName = mediaProperties?.Artist;
 
                         var displayProperties = session.TryGetMediaPropertiesAsync();
-                        var thumbnailStream = await mediaProperties.Thumbnail.OpenReadAsync();
+                        var thumbnailStream = mediaProperties?.Thumbnail != null ? await mediaProperties.Thumbnail.OpenReadAsync() : null;
 
-                        byte[] imageBytes;
-                        using (var memoryStream = new MemoryStream())
+                        byte[] imageBytes = null;
+                        if (thumbnailStream != null)
                         {
-                            await thumbnailStream.AsStreamForRead().CopyToAsync(memoryStream);
-                            imageBytes = memoryStream.ToArray();
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await thumbnailStream.AsStreamForRead().CopyToAsync(memoryStream);
+                                imageBytes = memoryStream.ToArray();
+                            }
                         }
 
-                        string currentImageHash = ComputeHash(imageBytes);
+                        string currentImageHash = imageBytes != null ? ComputeHash(imageBytes) : null;
 
                         if (currentImageHash != _lastImageHash)
                         {
                             _lastImageHash = currentImageHash;
-                            await _sender.SendPlayerImageAsync(imageBytes);
+                            if (imageBytes != null)
+                            {
+                                await _sender.SendPlayerImageAsync(imageBytes);
+                            }
                         }
 
                         bool containsMatch = whiteList.Any(item => appNameToLower.Contains(item.ToLower()));
 
                         if (containsMatch)
                         {
+                            var trackTimeInfo = await GetTrackTimeInfo(session);
                             await _sender.SendPlayerInfoAsync(artistName, trackTitle, appName);
-                            return $"Приложение: {appName}\nТрек: {trackTitle}\nИсполнитель: {artistName}";
+                            await _discordService.UpdatePresenceAsync(mediaProperties, trackTimeInfo);
+                            return $"Приложение: {appName}\nТрек: {trackTitle}\nИсполнитель: {artistName}\nОбщее время: {trackTimeInfo.totalTime}\nТекущая позиция: {trackTimeInfo.currentPosition}";
                         }
                         else
                         {
@@ -86,6 +103,8 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
             }
         }
 
+
+
         private static string ComputeHash(byte[] data)
         {
             using (var sha256 = SHA256.Create())
@@ -94,5 +113,24 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                 return Convert.ToBase64String(hashBytes);
             }
         }
+
+        private static async Task<(string totalTime, string currentPosition)> GetTrackTimeInfo(GlobalSystemMediaTransportControlsSession session)
+        {
+            var timelineProperties = session.GetTimelineProperties();
+            if (timelineProperties == null)
+            {
+                return (TimeSpan.Zero.ToString(@"hh\:mm\:ss"), TimeSpan.Zero.ToString(@"hh\:mm\:ss"));
+            }
+
+            var totalTime = timelineProperties.EndTime.TotalSeconds;
+            var currentPosition = timelineProperties.Position.TotalSeconds;
+
+            var totalTimeString = TimeSpan.FromSeconds(totalTime).ToString(@"hh\:mm\:ss");
+            var currentPositionString = TimeSpan.FromSeconds(currentPosition).ToString(@"hh\:mm\:ss");
+
+            return (totalTimeString, currentPositionString);
+        }
+
+
     }
 }
