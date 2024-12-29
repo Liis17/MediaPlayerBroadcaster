@@ -56,7 +56,7 @@ public class DiscordService : IDisposable
         }
     }
 
-    public async Task UpdatePresenceAsync(GlobalSystemMediaTransportControlsSessionMediaProperties mediaProperties, (string totalTime, string currentPosition) trackTimeInfo)
+    public async Task UpdatePresenceAsync(GlobalSystemMediaTransportControlsSessionMediaProperties mediaProperties, (string totalTime, string currentPosition) trackTimeInfo, string app)
     {
         if (!_enable) return;
 
@@ -76,9 +76,9 @@ public class DiscordService : IDisposable
             Assets = new Assets
             {
                 LargeImageKey = $"http://{ip}:{port}/player/getplayerimage/{Program.DiscordImageGuid}",
-                LargeImageText = "Large Image Text",
-                SmallImageKey = _showSmallIcon ? $"http://{ip}:{port}/player/getplayerimage/{Program.DiscordImageGuid}" : null,
-                SmallImageText = _showSmallIcon ? "Small Image Text" : null
+                LargeImageText = app,
+                SmallImageKey = /*_showSmallIcon ? $"http://{ip}:{port}/player/getplayerimage/{Program.DiscordImageGuid}" : */null,
+                SmallImageText = /*_showSmallIcon ? "Small Image Text" :*/ null
             },
             Timestamps = new Timestamps
             {

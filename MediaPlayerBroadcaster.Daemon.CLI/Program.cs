@@ -85,7 +85,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                         {
                             var trackTimeInfo = await GetTrackTimeInfo(session);
                             await _sender.SendPlayerInfoAsync(artistName, trackTitle, appName);
-                            await _discordService.UpdatePresenceAsync(mediaProperties, trackTimeInfo);
+                            await _discordService.UpdatePresenceAsync(mediaProperties, trackTimeInfo, appName);
                             return $"Приложение: {appName}\nТрек: {trackTitle}\nИсполнитель: {artistName}\nОбщее время: {trackTimeInfo.totalTime}\nТекущая позиция: {trackTimeInfo.currentPosition}";
                         }
                         else
