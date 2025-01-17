@@ -23,9 +23,14 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
             var _port = File.ReadAllText("port.data");
             whiteList = File.ReadAllLines("whitelist.data").ToList();
             _sender = new Sender(_ip, _port);
-
-            _discordService = new DiscordService("1255752860189196380", _ip, _port);
+            var discordStart = false;
+            if (File.Exists("discord"))
+            {
+                discordStart = true; 
+            }
+            _discordService = new DiscordService("1255752860189196380", _ip, _port, enable: discordStart);
             await _discordService.InitializeAsync();
+
 
             while (true)
             {

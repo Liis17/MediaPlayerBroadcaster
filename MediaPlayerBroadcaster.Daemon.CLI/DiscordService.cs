@@ -10,15 +10,15 @@ using Windows.Media.Control;
 
 public class DiscordService : IDisposable
 {
-    private readonly DiscordRpcClient _client;
-    private readonly string _applicationId;
-    private readonly bool _enable;
-    private readonly bool _showButtons;
-    private readonly bool _overrideDeepLinksExperiment;
-    private readonly bool _showGitHubButton;
-    private readonly int _afkTimeout;
-    private readonly bool _showAlbum;
-    private readonly bool _showSmallIcon;
+    private DiscordRpcClient _client;
+    private string _applicationId;
+    private bool _enable;
+    private bool _showButtons;
+    private bool _overrideDeepLinksExperiment;
+    private bool _showGitHubButton;
+    private int _afkTimeout;
+    private bool _showAlbum;
+    private bool _showSmallIcon;
 
     private string ip = string.Empty;
     private string port = string.Empty;
