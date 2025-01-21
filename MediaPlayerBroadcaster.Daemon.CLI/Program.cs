@@ -14,6 +14,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
         public static TrackData CurrentTrackData;
         static DiscordService _discordService;
         public static string DiscordImageGuid = string.Empty;
+        private static bool _discord = false;
         static async Task Main(string[] args)
         {
             
@@ -26,10 +27,12 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
             var discordStart = false;
             if (File.Exists("discord"))
             {
-                discordStart = true; 
+                discordStart = true;
+                _discord = true;
+                _discordService = new DiscordService("1255752860189196380", _ip, _port, enable: discordStart);
+                await _discordService.InitializeAsync();
             }
-            _discordService = new DiscordService("1255752860189196380", _ip, _port, enable: discordStart);
-            await _discordService.InitializeAsync();
+            
 
 
             while (true)
@@ -80,7 +83,11 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                             if (imageBytes != null)
                             {
                                 await _sender.SendPlayerImageAsync(imageBytes);
-                                DiscordImageGuid = Guid.NewGuid().ToString().Replace("-","") ;
+                                if (_discord)
+                                {
+                                    DiscordImageGuid = Guid.NewGuid().ToString().Replace("-", "");
+                                }
+                                
                             }
                         }
 
@@ -90,7 +97,11 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                         {
                             var trackTimeInfo = await GetTrackTimeInfo(session);
                             await _sender.SendPlayerInfoAsync(artistName, trackTitle, appName);
-                            await _discordService.UpdatePresenceAsync(mediaProperties, trackTimeInfo, appName);
+                            if (_discord)
+                            {
+                                await _discordService.UpdatePresenceAsync(mediaProperties, trackTimeInfo, appName);
+                            }
+                            
                             return $"Приложение: {appName}\nТрек: {trackTitle}\nИсполнитель: {artistName}\nОбщее время: {trackTimeInfo.totalTime}\nТекущая позиция: {trackTimeInfo.currentPosition}";
                         }
                         else
