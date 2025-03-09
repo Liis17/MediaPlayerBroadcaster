@@ -6,6 +6,7 @@
         public static string Track { get; set; }
         public static string App { get; set; }
         public static byte[] PlayerImage { get; set; }
+        public static string CoverUrl { get; set; }
         public static string DiscordImageLink { get; set; }
     }
 }

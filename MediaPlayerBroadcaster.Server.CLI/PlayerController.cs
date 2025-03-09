@@ -22,14 +22,31 @@ namespace MediaPlayerBroadcaster.Server.CLI
             return Ok(new { Status = "Данные плеера обновлены" });
         }
 
+        [HttpPost("setwebplayerinfo")]
+        public async Task<IActionResult> SetWebPlayerInfo([FromBody] JObject data)
+        {
+            if (data.TryGetValue("Artist", out var artist))
+                PlayerInfoStorage.Artist = artist.ToString();
+            if (data.TryGetValue("Track", out var track))
+                PlayerInfoStorage.Track = track.ToString();
+            if (data.TryGetValue("App", out var app))
+                PlayerInfoStorage.App = app.ToString();
+            if (data.TryGetValue("CoverUrl", out var cover))
+                PlayerInfoStorage.CoverUrl = cover.ToString();
+            PlayerInfoStorage.PlayerImage = null;
+
+            return Ok(new { Status = "Данные плеера обновлены" });
+        }
+
         [HttpGet("getplayerinfo")]
-        public IActionResult GetPlayerInfo()
+        public async Task<IActionResult> GetPlayerInfo()
         {
             var response = new Dictionary<string, string>
             {
                 { "Artist", PlayerInfoStorage.Artist },
                 { "Track", PlayerInfoStorage.Track },
-                { "App", PlayerInfoStorage.App }
+                { "App", PlayerInfoStorage.App },
+                { "CoverUrl", PlayerInfoStorage.CoverUrl }
             };
             return Ok(response);
         }
@@ -42,7 +59,8 @@ namespace MediaPlayerBroadcaster.Server.CLI
                 using (var memoryStream = new MemoryStream())
                 {
                     await Request.Body.CopyToAsync(memoryStream);
-                    PlayerInfoStorage.PlayerImage = memoryStream.ToArray(); 
+                    PlayerInfoStorage.PlayerImage = memoryStream.ToArray();
+                    PlayerInfoStorage.CoverUrl = "";
                 }
                 return Ok(new { Status = "Изображение плеера обновлено" });
             }
