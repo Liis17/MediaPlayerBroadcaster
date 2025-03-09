@@ -77,19 +77,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
 
                         string currentImageHash = imageBytes != null ? ComputeHash(imageBytes) : null;
 
-                        if (currentImageHash != _lastImageHash)
-                        {
-                            _lastImageHash = currentImageHash;
-                            if (imageBytes != null)
-                            {
-                                await _sender.SendPlayerImageAsync(imageBytes);
-                                if (_discord)
-                                {
-                                    DiscordImageGuid = Guid.NewGuid().ToString().Replace("-", "");
-                                }
-                                
-                            }
-                        }
+                        
 
                         bool containsMatch = whiteList.Any(item => appNameToLower.Contains(item.ToLower()));
 
@@ -101,7 +89,20 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                             {
                                 await _discordService.UpdatePresenceAsync(mediaProperties, trackTimeInfo, appName);
                             }
-                            
+
+                            if (currentImageHash != _lastImageHash)
+                            {
+                                _lastImageHash = currentImageHash;
+                                if (imageBytes != null)
+                                {
+                                    await _sender.SendPlayerImageAsync(imageBytes);
+                                    if (_discord)
+                                    {
+                                        DiscordImageGuid = Guid.NewGuid().ToString().Replace("-", "");
+                                    }
+
+                                }
+                            }
                             return $"Приложение: {appName}\nТрек: {trackTitle}\nИсполнитель: {artistName}\nОбщее время: {trackTimeInfo.totalTime}\nТекущая позиция: {trackTimeInfo.currentPosition}";
                         }
                         else

@@ -20,6 +20,10 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
         }
         public async Task SendPlayerInfoAsync(string artist, string track, string app)
         {
+            if (app == "Silence")
+            {
+                return;
+            }
             var playerInfo = new
             {
                 Artist = artist,
