@@ -10,13 +10,11 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
     public class Sender
     {
         private static readonly HttpClient client = new HttpClient();
-        private string ip = "127.0.0.1";
-        private string port = "1025";
+        private string server = "127.0.0.1";
 
-        public Sender(string _ip, string _port)
+        public Sender(string _server)
         {
-            ip = _ip;
-            port = _port;
+            server = _server;
         }
         public async Task SendPlayerInfoAsync(string artist, string track, string app)
         {
@@ -33,7 +31,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
             };
             var jsonContent = JsonConvert.SerializeObject(playerInfo);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync($"http://{ip}:{port}/player/setplayerinfo", content);
+            HttpResponseMessage response = await client.PostAsync($"{server}/player/setplayerinfo", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -56,7 +54,7 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
                 var content = new ByteArrayContent(resizedImage);
                 content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
 
-                HttpResponseMessage response = await client.PostAsync($"http://{ip}:{port}/player/setplayerimage", content);
+                HttpResponseMessage response = await client.PostAsync($"{server}/player/setplayerimage", content);
 
                 if (response.IsSuccessStatusCode)
                 {

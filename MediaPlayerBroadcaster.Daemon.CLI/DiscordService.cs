@@ -20,10 +20,9 @@ public class DiscordService : IDisposable
     private bool _showAlbum;
     private bool _showSmallIcon;
 
-    private string ip = string.Empty;
-    private string port = string.Empty;
+    private string server = string.Empty;
 
-    public DiscordService(string applicationId, string _ip, string _port, bool enable = true, bool showButtons = true, bool overrideDeepLinksExperiment = true, bool showGitHubButton = true, int afkTimeout = 15, bool showAlbum = true, bool showSmallIcon = true)
+    public DiscordService(string applicationId, string _server, bool enable = true, bool showButtons = true, bool overrideDeepLinksExperiment = true, bool showGitHubButton = true, int afkTimeout = 15, bool showAlbum = true, bool showSmallIcon = true)
     {
         _applicationId = applicationId;
         _enable = enable;
@@ -33,8 +32,7 @@ public class DiscordService : IDisposable
         _afkTimeout = afkTimeout;
         _showAlbum = showAlbum;
         _showSmallIcon = showSmallIcon;
-        ip = _ip;
-        port = _port;
+        server = _server;
 
         if (_enable)
         {
@@ -75,7 +73,7 @@ public class DiscordService : IDisposable
             State = $"{artist}",
             Assets = new Assets
             {
-                LargeImageKey = $"http://{ip}:{port}/player/getplayerimage/{Program.DiscordImageGuid}",
+                LargeImageKey = $"{server}/player/getplayerimage/{Program.DiscordImageGuid}",
                 LargeImageText = app,
                 SmallImageKey = /*_showSmallIcon ? $"http://{ip}:{port}/player/getplayerimage/{Program.DiscordImageGuid}" : */null,
                 SmallImageText = /*_showSmallIcon ? "Small Image Text" :*/ null

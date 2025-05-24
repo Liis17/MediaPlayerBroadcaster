@@ -20,16 +20,15 @@ namespace MediaPlayerBroadcaster.Daemon.CLI
             
             CurrentTrackData = new TrackData();
             Console.Title = "MediaPlayerBroadcaster.Daemon.CLI";
-            var _ip = File.ReadAllText("ip.data");
-            var _port = File.ReadAllText("port.data");
+            var _server = File.ReadAllText("server.data");
             whiteList = File.ReadAllLines("whitelist.data").ToList();
-            _sender = new Sender(_ip, _port);
+            _sender = new Sender(_server);
             var discordStart = false;
             if (File.Exists("discord"))
             {
                 discordStart = true;
                 _discord = true;
-                _discordService = new DiscordService("1255752860189196380", _ip, _port, enable: discordStart);
+                _discordService = new DiscordService("1255752860189196380", _server, enable: discordStart);
                 await _discordService.InitializeAsync();
             }
             
